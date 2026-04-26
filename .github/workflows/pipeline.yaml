@@ -7,12 +7,19 @@ on:
 
 jobs:
   deploy:
-    name: Deploy Docker Website
+    name: SonarCloud Scan and Deploy
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Deploy to EC2 using SSH
         uses: appleboy/ssh-action@v1.0.3
@@ -24,10 +31,11 @@ jobs:
             git config --global --add safe.directory /home/ec2-user/devqaops-portfolio
 
             cd /home/ec2-user/devqaops-portfolio
-            git pull origin main
+            git fetch --all
+            git reset --hard origin/main
 
             sudo docker stop devqaops-portfolio || true
             sudo docker rm devqaops-portfolio || true
 
-            sudo docker build -t devqaops-portfolio .
+            sudo docker build --no-cache -t devqaops-portfolio .
             sudo docker run -d -p 80:80 --name devqaops-portfolio devqaops-portfolio

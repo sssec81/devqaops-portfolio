@@ -1,0 +1,31 @@
+name: Deploy Portfolio to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy Docker Website
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy to EC2 using SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /home/ec2-user/devqaops-portfolio
+            git pull origin main
+
+            docker stop devqaops-portfolio || true
+            docker rm devqaops-portfolio || true
+
+            docker build -t devqaops-portfolio .
+            docker run -d -p 80:80 --name devqaops-portfolio devqaops-portfolio

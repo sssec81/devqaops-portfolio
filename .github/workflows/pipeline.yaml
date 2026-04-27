@@ -1,38 +1,21 @@
-name: Deploy Portfolio to EC2
-
-on:
-  push:
-    branches:
-      - main
-
-jobs:
-  deploy:
-    name: SonarCloud Scan and Deploy
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarqube-scan-action@v6
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
       - name: Deploy to EC2 using SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
+          script_stop: true
           script: |
+            sudo chown -R ec2-user:ec2-user /home/ec2-user/devqaops-portfolio
             git config --global --add safe.directory /home/ec2-user/devqaops-portfolio
 
             cd /home/ec2-user/devqaops-portfolio
+
             git fetch --all
             git reset --hard origin/main
+
+            echo "Current deployed commit:"
+            git log --oneline -1
 
             sudo docker stop devqaops-portfolio || true
             sudo docker rm devqaops-portfolio || true

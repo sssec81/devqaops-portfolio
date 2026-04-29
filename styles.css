@@ -18,6 +18,10 @@
   --radius-lg: 24px;
   --radius-md: 18px;
   --max-width: 1180px;
+  --blue: #3b82f6;
+  --green: #10b981;
+  --violet: #6366f1;
+  --amber: #f59e0b;
 }
 
 * {
@@ -303,6 +307,39 @@ section {
   text-transform: uppercase;
 }
 
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42rem;
+  padding: 0.38rem 0.82rem;
+  border-radius: 999px;
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+  letter-spacing: 0.09em;
+}
+
+.section-label::before {
+  content: "";
+  width: 0.38rem;
+  height: 0.38rem;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.project-tag {
+  display: inline-block;
+  padding: 0.32rem 0.72rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.1);
+  margin-bottom: 0.65rem;
+}
+
+.skill-category {
+  color: var(--card-color, var(--muted));
+}
+
 .showcase-panel-large h2 {
   margin-top: 0.75rem;
   font-size: clamp(1.7rem, 2.8vw, 2.35rem);
@@ -373,6 +410,17 @@ section {
   background: rgba(255, 255, 255, 0.6);
   color: var(--muted-strong);
   box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.06);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+}
+
+.about-points li::before {
+  content: "✓";
+  flex-shrink: 0;
+  color: var(--blue);
+  font-weight: 700;
+  line-height: 1.6;
 }
 
 .skills-grid {
@@ -388,6 +436,33 @@ section {
   flex-direction: column;
   justify-content: space-between;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.skill-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--card-color, transparent);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.skill-icon {
+  position: absolute;
+  right: 1rem;
+  bottom: 0.75rem;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--card-color, var(--muted));
+  opacity: 0.13;
+  pointer-events: none;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  user-select: none;
 }
 
 .skill-card:hover,
@@ -407,6 +482,19 @@ section {
 .project-card {
   padding: 1.8rem;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.project-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--card-color, transparent);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
 
 .stack-line {
@@ -450,9 +538,11 @@ section {
 }
 
 footer {
-  padding: 2.5rem 0 0.5rem;
+  padding: 2.5rem 0 1.5rem;
   color: var(--muted);
   font-size: 0.92rem;
+  border-top: 1px solid var(--border);
+  text-align: center;
 }
 
 :focus-visible {
@@ -460,10 +550,50 @@ footer {
   outline-offset: 3px;
 }
 
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.45rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 0.5rem;
+  transition: background 0.2s ease;
+  margin-left: auto;
+}
+
+.nav-toggle:hover {
+  background: rgba(15, 23, 42, 0.06);
+}
+
+.nav-toggle span {
+  width: 1.4rem;
+  height: 2px;
+  background: var(--text);
+  border-radius: 999px;
+  display: block;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.nav-toggle[aria-expanded="true"] span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.nav-toggle[aria-expanded="true"] span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+.nav-toggle[aria-expanded="true"] span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
 .reveal {
   opacity: 0;
   transform: translateY(24px);
   transition: opacity 0.65s ease, transform 0.65s ease;
+  transition-delay: var(--stagger, 0s);
 }
 
 .reveal.visible {
@@ -497,12 +627,23 @@ footer {
 
 @media (max-width: 720px) {
   .nav-inner {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .nav-toggle {
+    display: flex;
   }
 
   .nav-links {
+    display: none;
+    flex-basis: 100%;
     justify-content: flex-start;
+    padding-bottom: 0.5rem;
+  }
+
+  .nav-links.open {
+    display: flex;
   }
 
   main {

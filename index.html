@@ -22,6 +22,11 @@
         <span class="brand-mark">SJ</span>
         <span class="brand-name">Shaman Jung Shah</span>
       </a>
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
       <ul class="nav-links">
         <li><a href="#about">About</a></li>
         <li><a href="#skills">Skills</a></li>
@@ -123,35 +128,43 @@
       </div>
 
       <div class="skills-grid">
-        <article class="skill-card reveal">
+        <article class="skill-card reveal" style="--card-color: #f97316">
+          <span class="skill-icon">Jv</span>
           <span class="skill-category">Language</span>
           <h3>Java</h3>
         </article>
-        <article class="skill-card reveal">
+        <article class="skill-card reveal" style="--card-color: #0ea5e9">
+          <span class="skill-icon">Re</span>
           <span class="skill-category">Frontend</span>
           <h3>React</h3>
         </article>
-        <article class="skill-card reveal">
+        <article class="skill-card reveal" style="--card-color: #ce432b">
+          <span class="skill-icon">Rs</span>
           <span class="skill-category">Systems</span>
           <h3>Rust</h3>
         </article>
-        <article class="skill-card reveal">
+        <article class="skill-card reveal" style="--card-color: #ff9900">
+          <span class="skill-icon">Aw</span>
           <span class="skill-category">Cloud</span>
           <h3>AWS</h3>
         </article>
-        <article class="skill-card reveal">
+        <article class="skill-card reveal" style="--card-color: #2496ed">
+          <span class="skill-icon">Dk</span>
           <span class="skill-category">Containers</span>
           <h3>Docker</h3>
         </article>
-        <article class="skill-card reveal">
+        <article class="skill-card reveal" style="--card-color: #6366f1">
+          <span class="skill-icon">GH</span>
           <span class="skill-category">Pipelines</span>
           <h3>GitHub Actions</h3>
         </article>
-        <article class="skill-card reveal">
+        <article class="skill-card reveal" style="--card-color: #f59e0b">
+          <span class="skill-icon">CF</span>
           <span class="skill-category">IaC</span>
           <h3>CloudFormation</h3>
         </article>
-        <article class="skill-card reveal">
+        <article class="skill-card reveal" style="--card-color: #4a90d9">
+          <span class="skill-icon">SC</span>
           <span class="skill-category">Quality</span>
           <h3>SonarCloud</h3>
         </article>
@@ -168,7 +181,7 @@
       </div>
 
       <div class="projects-grid">
-        <article class="project-card reveal">
+        <article class="project-card reveal" style="--card-color: #6366f1">
           <span class="project-tag">Portfolio</span>
           <h3>DevOps Portfolio Website</h3>
           <p>A single-page portfolio designed to present technical capabilities, project outcomes, and deployment work
@@ -180,7 +193,7 @@
           </div>
         </article>
 
-        <article class="project-card reveal">
+        <article class="project-card reveal" style="--card-color: #f59e0b">
           <span class="project-tag">Cloud Deployment</span>
           <h3>AWS EC2 Docker Deployment</h3>
           <p>A containerized deployment workflow for hosting an application on AWS EC2 with a focus on reproducibility,
@@ -192,7 +205,7 @@
           </div>
         </article>
 
-        <article class="project-card reveal">
+        <article class="project-card reveal" style="--card-color: #10b981">
           <span class="project-tag">Automation</span>
           <h3>CI/CD Pipeline with GitHub Actions</h3>
           <p>An automated pipeline that validates, builds, and prepares deployment updates so code changes move from
@@ -204,7 +217,7 @@
           </div>
         </article>
 
-        <article class="project-card reveal">
+        <article class="project-card reveal" style="--card-color: #3b82f6">
           <span class="project-tag">Code Quality</span>
           <h3>Static Code Analysis with SonarCloud</h3>
           <p>A quality-focused workflow using SonarCloud to surface maintainability issues and encourage better
@@ -321,6 +334,30 @@
     );
 
     sections.forEach((section) => navObserver.observe(section));
+
+    // Stagger animations for grid children
+    document.querySelectorAll(".skills-grid, .projects-grid, .stats-grid, .about-grid, .highlight-grid, .contact-grid").forEach((grid) => {
+      Array.from(grid.children).forEach((child, i) => {
+        child.style.setProperty("--stagger", `${i * 0.09}s`);
+      });
+    });
+
+    // Mobile hamburger menu
+    const navToggle = document.querySelector(".nav-toggle");
+    const navLinksList = document.querySelector(".nav-links");
+    if (navToggle) {
+      navToggle.addEventListener("click", () => {
+        const expanded = navToggle.getAttribute("aria-expanded") === "true";
+        navToggle.setAttribute("aria-expanded", String(!expanded));
+        navLinksList.classList.toggle("open");
+      });
+      navLinksList.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", () => {
+          navToggle.setAttribute("aria-expanded", "false");
+          navLinksList.classList.remove("open");
+        });
+      });
+    }
   </script>
 </body>
 
